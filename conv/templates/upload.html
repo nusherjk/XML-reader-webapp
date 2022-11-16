@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload XML</title>
+
+    <style>
+        #tblData {
+          font-family: Arial, Helvetica, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+        
+        #tblData td, #tblData th {
+          border: 1px solid #ddd;
+          /* padding: 8px; */
+        }
+
+        
+        .form-spacing{
+            margin: 60px auto;
+            /* display: flex;
+            flex-direction: column; */
+            
+        }
+        
+        .text{
+            mso-number-format:\@;
+        }
+        .form-type{
+            margin: 10px;
+        }
+        
+        #tblData th {
+          padding-top: 12px;
+          padding-bottom: 12px;
+          text-align: left;
+          background-color: #0481aa;
+          color: white;
+        }
+        </style>
+    
+    <script type="text/javascript">
+
+        function exportTableToExcel(tableID, filename = ''){
+            var downloadLink;
+            var dataType = 'application/vnd.ms-excel';
+            var tableSelect = document.getElementById(tableID);
+            var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+            
+            // Specify file name
+            filename = filename?filename+'.xls':'excel_data.xls';
+            
+            // Create download link element
+            downloadLink = document.createElement("a");
+            
+            document.body.appendChild(downloadLink);
+            
+            if(navigator.msSaveOrOpenBlob){
+                var blob = new Blob(['\ufeff', tableHTML], {
+                    type: dataType
+                });
+                navigator.msSaveOrOpenBlob( blob, filename);
+            }else{
+                // Create a link to the file
+                downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+            
+                // Setting the file name
+                downloadLink.download = filename;
+                
+                //triggering the function
+                downloadLink.click();
+            }
+        }
+</script>
+</head>
+<body>
+    <header>
+        <div>
+            <div style="background-color: #0481aa; color: White;vertical-align: middle; line-height: 60px;
+                padding-left: 5px; font-size: 36px; font-family: Tahoma;">
+                XML File Converter <span style="font-size: medium;"> (for specific users.)
+                </span>
+            </div>
+            <div style="font-size: 12px; font-family: Tahoma; color: White; background-color: #0481aa;
+                padding-left: 5px; padding-bottom: 5px;">
+                <b>Steps :</b>
+                <ol type="1">
+                    <li>Generate file in XML Format</li>
+           
+                    <li>Browse the File (Best Experienced in Chrome Browser)</li>
+                    <li>Click "Upload" to Load Data</li>
+                    <li>After Loading Data into the Below Table, Click "Export Table Data To Excel File" to Get 
+                        Converted Excel File</li>
+                </ol>
+                <span>For any query, pls contact : 01937148058</span>
+            </div>
+        </div>
+
+    </header>
+    <div>
+        <form class="form-spacing" action="{% url 'index' %}" enctype=multipart/form-data method="post">
+            {% csrf_token %}
+            <input class="form-type" type="file" name="xmlfile" id="xmlfile"><br>
+            <button class="form-type" type="submit">Upload</button>
+            {% if treeData %}
+
+                <button onclick="exportTableToExcel('tblData')">Export Table Data To Excel File</button>
+                
+            {% endif %}
+        </form>
+    </div>
+
+
+
+    <div>
+    {% if treeData %}
+
+    <!-- <button onclick="exportTableToExcel('tblData')">Export Table Data To Excel File</button> -->
+    <table id="tblData">
+        <tbody>
+            <tr style="border: solid black 1px; ">
+                <th style="border-right: solid black 1px;">sttlementDate</th>
+                <th style="border-right: solid black 1px;">transactionDate</th>
+                <th style="border-right: solid black 1px;">BIN</th>
+                <th style="border-right: solid black 1px;">cardNumber</th>
+                <th style="border-right: solid black 1px;">RRN</th>
+                <th style="border-right: solid black 1px;">ARN</th>
+                <th style="border-right: solid black 1px;">DRN</th>
+                <th style="border-right: solid black 1px;">SRN</th>
+                <th style="border-right: solid black 1px;">Auth Code</th>
+                <th style="border-right: solid black 1px;">Source Account</th>
+                <th style="border-right: solid black 1px;">Beneficiary Account</th>
+                <th style="border-right: solid black 1px;">MCC</th>
+                <th style="border-right: solid black 1px;">RequestCategory</th>
+                <th style="border-right: solid black 1px;">MsgCode</th>
+                <th style="border-right: solid black 1px;">TransType</th>
+                <th style="border-right: solid black 1px;">TransCurrency</th>
+                <th style="border-right: solid black 1px;">TransAmount</th>
+                <th style="border-right: solid black 1px;">MerchantName</th>
+                <th style="border-right: solid black 1px;">MerchantID</th>
+                <th style="border-right: solid black 1px;">OrigContractNumber</th>
+                <th style="border-right: solid black 1px;">OrigMemberId</th>
+                <th style="border-right: solid black 1px;">PhaseDate</th>
+                <th style="border-right: solid black 1px;">ReconCurrency</th>
+                <th style="border-right: solid black 1px;">ReconAmount</th>
+            </tr>
+            {% for x in treeData %}
+            <tr style="border: solid black 1px; ">
+                <td class="text" style="border-right: solid black 1px;">&nbsp;{{ x.sttlementDate }}</td>
+                <td class="text" style="border-right: solid black 1px;">&nbsp;{{ x.transactionDate }}</td>
+                <td class="text" style="border-right: solid black 1px;">&nbsp;{{ x.bin_ }}</td>
+                <td class="text" style="border-right: solid black 1px;">&nbsp;{{ x.cardNumber }}</td>
+                <td class="text" style="border-right: solid black 1px;">&nbsp;{{ x.RRN }}</td>
+                <td class="text" style="border-right: solid black 1px;">&nbsp;{{ x.ARN }}</td>
+                <td class="text" style="border-right: solid black 1px;">&nbsp;{{ x.DRN }}</td>
+                <td class="text" style="border-right: solid black 1px;">&nbsp;{{ x.SRN }}</td>
+                <td class="text" style="border-right: solid black 1px;">&nbsp;{{ x.AuthCode }}</td>
+                <td class="text" style="border-right: solid black 1px;">&nbsp;{{ x.SourceAccount }}</td>
+                <td class="text" style="border-right: solid black 1px;">&nbsp;{{ x.BeneficiaryAccount }}</td>
+                <td class="text" style="border-right: solid black 1px;">&nbsp;{{ x.MCC }}</td>
+                <td class="text" style="border-right: solid black 1px;">&nbsp;{{ x.RequestCategory }}</td>
+                <td class="text" style="border-right: solid black 1px;">&nbsp;{{ x.MsgCode }}</td>
+                <td class="text" style="border-right: solid black 1px;">&nbsp;{{ x.TransType }}</td>
+                <td class="text" style="border-right: solid black 1px;">&nbsp;{{ x.TransCurrency }}</td>
+                <td class="text" style="border-right: solid black 1px;">&nbsp;{{ x.TransAmount }}</td>
+                <td class="text" style="border-right: solid black 1px;">&nbsp;{{ x.MerchantName }}</td>
+                <td class="text" style="border-right: solid black 1px;">&nbsp;{{ x.MerchantID }}</td>
+                <td class="text" style="border-right: solid black 1px;">&nbsp;{{ x.OrigContractNumber }}</td>
+                <td class="text" style="border-right: solid black 1px;">&nbsp;{{ x.OrigMemberId }}</td>
+                <td class="text" style="border-right: solid black 1px;">&nbsp;{{ x.PhaseDate }}</td>
+                <td class="text" style="border-right: solid black 1px;">&nbsp;{{ x.ReconCurrency }}</td>
+                <td class="text" style="border-right: solid black 1px;">&nbsp;{{ x.ReconAmount }}</td>
+            </tr>
+            
+            {% endfor%}
+            
+            
+        </tbody>
+    </table>
+
+    {% endif %}
+    
+    </div>
+
+</body>
+</html>
