@@ -42,6 +42,7 @@ def xmlsplitter(file):
         singleinfo.bin_ =sbin_
         singleinfo.transactionDate = doc.find('./LocalDt').text
         singleinfo.cardNumber =doc.find('./Destination/ContractNumber').text
+        singleinfo.bin_ = singleinfo.cardNumber [:6]
         singleinfo.OrigContractNumber = doc.find('./Originator/ContractNumber').text
         singleinfo.OrigMemberId = doc.find('./Originator/MemberId').text
         
@@ -85,7 +86,7 @@ def xmlsplitter(file):
         
         # singleinfo.MsgCode =""
         if(MsgCodeFILE!=None):
-            print(MsgCodeFILE.text)
+            # print(MsgCodeFILE.text)
             singleinfo.MsgCode = MsgCodeFILE.text
 
 
